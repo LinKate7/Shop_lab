@@ -87,7 +87,7 @@ public partial class ShopContext : DbContext
             entity.ToTable("Category");
 
             entity.Property(e => e.CategoryId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(50);
         });
@@ -163,7 +163,7 @@ public partial class ShopContext : DbContext
             entity.ToTable("Product");
 
             entity.Property(e => e.ProductId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.Description).HasColumnType("ntext");
