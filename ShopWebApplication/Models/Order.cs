@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShopWebApplication.Models;
 
@@ -9,19 +10,25 @@ public partial class Order
 
     public int UserId { get; set; }
 
+    [Display(Name ="Дата й час")]
     public DateTime OrderDate { get; set; }
 
-    public decimal Price { get; set; }
+    [Display(Name = "До оплати")]
+    public int Price { get; set; }
 
+    [Display(Name = "Статус")]
     public int StatusId { get; set; }
 
     public int ClientInfoId { get; set; }
 
-    public virtual ClientInfo ClientInfo { get; set; } = null!;
+    [Display(Name = "Одержувач")]
+    public virtual ClientInfo? ClientInfo { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
-    public virtual Status Status { get; set; } = null!;
+    [Display(Name = "Статус")]
+    public virtual Status? Status { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    [Display(Name = "Користувач, що зробив замовлення")]
+    public virtual User? User { get; set; }
 }

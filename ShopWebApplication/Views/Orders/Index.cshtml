@@ -1,0 +1,91 @@
+@model IEnumerable<ShopWebApplication.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .order-item-info td{
+        vertical-align:middle
+    }
+</style>
+
+<style>
+    .order-item-info-headers th{
+        text-align:left
+    }
+</style>
+
+<h1>Список замовлень</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th class="text-center">
+                Товар
+            </th>
+            <th class="text-center">
+                Кількість
+            </th>
+            <th class="text-center">
+                Ціна
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var order in Model) {
+        <tr>
+            <td style="vertical-align: middle">
+                @Html.DisplayFor(modelItem => order.OrderDate)
+            </td>
+            <td colspan="3" class="order-item-info" class="">
+                <table>
+                    <tbody>
+                        @foreach (var orderItem in order.OrderItems)
+                        {
+                            <tr>
+                                <td>@orderItem?.Product?.ProductName</td>
+                                <td>@orderItem?.OrderItemQuantity</td>
+                                <td>@orderItem?.Product?.Price</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+            <td style="vertical-align: middle">
+                @Html.DisplayFor(modelItem => order.Price)
+            </td>
+            <td style="vertical-align: middle">
+                @Html.DisplayFor(modelItem => order.ClientInfo.FullName)
+            </td>
+            <td style="vertical-align: middle">
+                @Html.DisplayFor(modelItem => order.Status.StatusName)
+            </td>
+            <td style="vertical-align: middle">
+                @Html.DisplayFor(modelItem => order.User.FullName)
+            </td>
+            <td style="vertical-align: middle">
+                <a asp-action="Edit" asp-route-id="@order.OrderId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@order.OrderId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@order.OrderId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

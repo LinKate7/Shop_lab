@@ -25,5 +25,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\Home\User.cshtml" />
+    <Content Remove="wwwroot\Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 </Project>

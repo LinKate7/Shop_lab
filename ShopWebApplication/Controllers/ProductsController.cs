@@ -40,6 +40,8 @@ namespace ShopWebApplication.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductSizes)
+                .ThenInclude(ps => ps.Size)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
@@ -52,7 +54,9 @@ namespace ShopWebApplication.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            //var products = _context.Products.Include(p => p.ProductSizes).ThenInclude(ps => ps.Size);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewData["SizeId"] = new SelectList(_context.ProductSizes, "SizeId", "SizeName");
             return View();
         }
 
