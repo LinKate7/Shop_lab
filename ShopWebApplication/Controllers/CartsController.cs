@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,11 @@ namespace ShopWebApplication.Controllers
     public class CartsController : Controller
     {
         private readonly ShopContext _context;
-
-        public CartsController(ShopContext context)
+        private readonly ICartRepository _cartRepo;
+        public CartsController(ShopContext context, ICartRepository cartRepository)
         {
             _context = context;
+            _cartRepo = cartRepository;
         }
 
         // GET: Carts
@@ -160,5 +162,39 @@ namespace ShopWebApplication.Controllers
         {
             return _context.Carts.Any(e => e.CartId == id);
         }
+
+        // add cart repository action handlers
+
+        public async Task<IActionResult> AddItem(int productId, int quantity, int redirect = 0)
+        {
+            var cartItemsCount = await _cartRepo.AddItem(productId, quantity);
+            if(redirect == 0)
+            {
+                return Ok(cartItemsCount);
+            }
+            return RedirectToAction("GetUserCart");
+        }
+
+        public async Task<IActionResult> RemoveItem(int productId)
+        {
+            var cartItemsCount = await _cartRepo.RemoveItem(productId);
+            return RedirectToAction("GetUserCart");
+        }
+
+        public async Task<IActionResult> GetUserCart()
+        {
+            var cart = _cartRepo.GetUserCart();
+            return View(cart);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTotalItemNumberInCart(int userId)
+        {
+            var itemsCount = _cartRepo.GetCartItemCount(userId);
+            return Ok(itemsCount);
+        }
     }
+
 }
+

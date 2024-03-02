@@ -1,10 +1,17 @@
 ﻿using ShopWebApplication.Models;
 using Microsoft.EntityFrameworkCore;
+using ShopWebApplication.Repositories;
+using ShopWebApplication;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddEntityFrameworkStores<ShopContext>()
+        .AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<ICartRepository, CartRepository>();
 
 builder.Services.AddDbContext<ShopContext>(option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection"))
