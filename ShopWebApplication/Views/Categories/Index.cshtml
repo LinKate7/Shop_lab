@@ -35,40 +35,39 @@
         }
     </tbody>
 </table>
-<div class="container">
-    <div id="piechart" style="width: 900px; height: 500px;"></div>
-</div>
+<div id="countByCategoryChart"></div>
 @section scripts{
-    <html>
-    <head>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">google.charts.load('current', { 'packages': ['piechart'] });
-            google.charts.setOnLoadCallback(drawChart);
+    <script>function drawCountByCategoryChart(categoryToCountList) {
+            const dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Категорія');
+            dataTable.addColumn('number', 'Кількість товарів');
 
-            function drawChart() {
-                $.get('/api/Chart/JsonData', function (JsonData) {
-                    var data = google.visualization.arrayToDataTable(JsonData, false);
-                    var formatter = new google.visualization.NumberFormat({ prefix: '$' });
-                    formatter.format(data, 2);
-                    formatter.format(data, 3);
-                    var options = {
-                        chart: {
-                            title: 'Products',
-                            subtitle: 'Count, Price, and Total price: Name',
-                        },
-                        bars: 'horizontal' // Required for Material Bar Charts.
-                    };
+            categoryToCountList.forEach(item => {
+                dataTable.addRow([item.categoryName, item.count]);
+            });
 
-                    var chart = new google.charts.Bar(document.getElementById('piechart'));
+            const options = {
+                title: "Товари за категоріями",
+                width: 600,
+                height: 400,
+                legend: { position: 'none' }
+            };
 
-                    chart.draw(data, google.charts.Bar.convertOptions(options));
+            const chart = new google.visualization.ColumnChart(document.getElementById('countByCategoryChart'));
+            chart.draw(dataTable, options);
+        }
+
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            fetch('/api/Chart/countByCategory')
+                .then(response => response.json())
+                .then(data => {
+                    drawCountByCategoryChart(data)
                 });
-            }</script>
-    </head>
-    <body>
-        <div id="barchart_material" style="width: 900px; height: 500px;"></div>
-    </body>
-</html>
+        }</script>
 }
+
 
 

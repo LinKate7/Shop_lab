@@ -11,14 +11,14 @@
 </style>
 
 <style>
-    .order-item-info-headers th{
-        text-align:left
+    .order-item-info-headers th {
+        text-align: left
     }
 </style>
 <style>
     .product-image {
-        max-width: 100px; 
-        max-height: 100px; 
+        max-width: 100px;
+        max-height: 100px;
     }
 </style>
 
@@ -54,42 +54,72 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var order in Model) {
-        <tr>
-            <td style="vertical-align: middle">
-                @order.OrderDate.ToString("dd.MM.yyyy HH:mm:ss")
-            </td>
-            <td colspan="4" class="order-item-info" class="order-item-info">
-                <table>
-                    <tbody>
-                        @foreach (var orderItem in order.OrderItems)
-                        {
-                            <tr>
-                                <td>@orderItem?.Product?.ProductName</td>
-                                <td><img src="@orderItem.Product?.ImageUrl" alt="Clothing Image" class="product-image" /></td>
-                                <td>@orderItem?.OrderItemQuantity</td>
-                                <td>@orderItem?.Product?.Price</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </td>
-            <td style="vertical-align: middle">
-                @Html.DisplayFor(modelItem => order.Price)
-            </td>
-            <td style="vertical-align: middle">
-                @Html.DisplayFor(modelItem => order.ClientInfo.FullName)
-            </td>
-            <td style="vertical-align: middle">
-                @Html.DisplayFor(modelItem => order.Status.StatusName)
-            </td>
-            <td style="vertical-align: middle">
-                <a asp-action="Edit" asp-route-id="@order.OrderId">Редагувати</a> |
-                <a asp-action="Details" asp-route-id="@order.OrderId">Деталі</a> |
-                <a asp-action="Delete" asp-route-id="@order.OrderId">Видалити</a>
-            </td>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td style="vertical-align: middle">
+                    @order.OrderDate.ToString("dd.MM.yyyy HH:mm:ss")
+                </td>
+                <td colspan="4" class="order-item-info" class="order-item-info">
+                    <table>
+                        <tbody>
+                            @foreach (var orderItem in order.OrderItems)
+                            {
+                                <tr>
+                                    <td>@orderItem?.Product?.ProductName</td>
+                                    <td><img src="@orderItem.Product?.ImageUrl" alt="Clothing Image" class="product-image" /></td>
+                                    <td>@orderItem?.OrderItemQuantity</td>
+                                    <td>@orderItem?.Product?.Price</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+                <td style="vertical-align: middle">
+                    @Html.DisplayFor(modelItem => order.Price)
+                </td>
+                <td style="vertical-align: middle">
+                    @Html.DisplayFor(modelItem => order.ClientInfo.FullName)
+                </td>
+                <td style="vertical-align: middle">
+                    @Html.DisplayFor(modelItem => order.Status.StatusName)
+                </td>
+                <td style="vertical-align: middle">
+                    <a asp-action="Edit" asp-route-id="@order.OrderId">Редагувати</a> |
+                    <a asp-action="Details" asp-route-id="@order.OrderId">Деталі</a> |
+                    <a asp-action="Delete" asp-route-id="@order.OrderId">Видалити</a>
+                </td>
 
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
+
+<div id="pie_chart_div"></div>
+
+@section scripts{
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        async function drawChart() {
+            try {
+                const response = await axios.get('/api/chart/piechart-data');
+                const data = response.data;
+                const dataTable = google.visualization.arrayToDataTable(data);
+
+                const options = {
+                    title: 'Кількість товварів, що мають відповідний статус',
+                    is3D: true,
+                };
+
+                const chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
+                chart.draw(dataTable, options);
+            } catch (error) {
+                console.error('Error fetching pie chart data:', error);
+            }
+        }</script>
+}

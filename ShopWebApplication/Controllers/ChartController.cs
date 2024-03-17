@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ShopWebApplication.Models;
 
 namespace ShopWebApplication.Controllers
@@ -14,19 +15,32 @@ namespace ShopWebApplication.Controllers
             _context = context;
         }
 
-        [HttpGet("JsonData")]
+        [HttpGet("countByCategory")]
 
-        public JsonResult JsonData()
+        public async Task<IActionResult> GetCountByCategory()
         {
-            var categories = _context.Categories.ToList();
-            var categoryClothes = new List<object>();
-            categoryClothes.Add(new[] { "Категорія", "Кількість товарів" });
-            foreach(var c in categories)
+            var result = await _context.Products
+                .GroupBy(product => product.Category.CategoryName)
+                .Select(productGroup => new CountByCategoryResponseItem(productGroup.Key.ToString(), productGroup.Count())).ToListAsync();
+
+            return new JsonResult(result);
+        }
+
+        [HttpGet("piechart-data")]
+        public async Task<JsonResult> GetPieChartData()
+        {
+            var orders = await _context.Statuses
+                .Include(s => s.Orders)
+                .ToListAsync();
+
+            var orderStatuses= new List<object>();
+            orderStatuses.Add(new[] { "Стасус", "Кількість замовлень із цим статусом" });
+            foreach (var c in orders)
             {
-                categoryClothes.Add(new object[] { c.CategoryName, c.Products.Count()});
+                orderStatuses.Add(new object[] { c.StatusName, c.Orders.Count() });
             }
 
-            return new JsonResult(categoryClothes);
+            return new JsonResult(orderStatuses);
         }
 
     }
