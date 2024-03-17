@@ -20,6 +20,7 @@ public partial class Product
     [Display(Name = "Категорія")]
     public int? CategoryId { get; set; }
 
+    [Display(Name = "Картинка")]
     public string? ImageUrl { get; set; }
 
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();

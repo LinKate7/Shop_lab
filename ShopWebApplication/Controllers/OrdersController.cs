@@ -21,7 +21,10 @@ namespace ShopWebApplication
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var shopContext = _context.Orders.Include(o => o.ClientInfo).Include(o => o.Status).Include(o => o.User).Include(o => o.OrderItems).ThenInclude(oi => oi.Product);
+            var shopContext = _context.Orders.Include(o => o.ClientInfo).Include(o => o.Status).Include(o => o.User).Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ThenInclude(p => p.ProductSizes)
+                .ThenInclude(ps => ps.Size);
             return View(await shopContext.ToListAsync());
         }
 

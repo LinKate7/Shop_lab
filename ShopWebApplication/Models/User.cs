@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ShopWebApplication.Models;
 
-public partial class User
+public partial class User 
 {
     public int UserId { get; set; }
 

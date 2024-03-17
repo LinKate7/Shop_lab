@@ -17,7 +17,7 @@ namespace ShopWebApplication.Repositories
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<int> AddItem(int productId, int quantity) // add from this point
+        public async Task<int> AddItem(int productId, int quantity)
         {
             using var transaction = _context.Database.BeginTransaction();
             int userId = GetUserId();
@@ -118,11 +118,9 @@ namespace ShopWebApplication.Repositories
 
         public int GetUserId()
         {
-            /*var user = _httpContextAccessor.HttpContext.User;
+            var user = _httpContextAccessor.HttpContext.User;
             int userId = Convert.ToInt32(_userManager.GetUserId(user));
-            return userId;*/
-            int userid = 1;
-            return userid;
+            return userId;
         }
 
         public async Task<int> GetCartItemCount(int userId)

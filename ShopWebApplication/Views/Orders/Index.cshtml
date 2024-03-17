@@ -5,14 +5,20 @@
 }
 
 <style>
-    .order-item-info td{
-        vertical-align:middle
+    .order-item-info td {
+        vertical-align: middle;
     }
 </style>
 
 <style>
     .order-item-info-headers th{
         text-align:left
+    }
+</style>
+<style>
+    .product-image {
+        max-width: 100px; 
+        max-height: 100px; 
     }
 </style>
 
@@ -26,6 +32,9 @@
             </th>
             <th class="text-center">
                 Товар
+            </th>
+            <th class="text-center">
+                Картинка
             </th>
             <th class="text-center">
                 Кількість
@@ -42,25 +51,22 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var order in Model) {
         <tr>
             <td style="vertical-align: middle">
-                @Html.DisplayFor(modelItem => order.OrderDate)
+                @order.OrderDate.ToString("dd.MM.yyyy HH:mm:ss")
             </td>
-            <td colspan="3" class="order-item-info" class="">
+            <td colspan="4" class="order-item-info" class="order-item-info">
                 <table>
                     <tbody>
                         @foreach (var orderItem in order.OrderItems)
                         {
                             <tr>
                                 <td>@orderItem?.Product?.ProductName</td>
+                                <td><img src="@orderItem.Product?.ImageUrl" alt="Clothing Image" class="product-image" /></td>
                                 <td>@orderItem?.OrderItemQuantity</td>
                                 <td>@orderItem?.Product?.Price</td>
                             </tr>
@@ -78,13 +84,11 @@
                 @Html.DisplayFor(modelItem => order.Status.StatusName)
             </td>
             <td style="vertical-align: middle">
-                @Html.DisplayFor(modelItem => order.User.FullName)
+                <a asp-action="Edit" asp-route-id="@order.OrderId">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@order.OrderId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@order.OrderId">Видалити</a>
             </td>
-            <td style="vertical-align: middle">
-                <a asp-action="Edit" asp-route-id="@order.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@order.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@order.OrderId">Delete</a>
-            </td>
+
         </tr>
 }
     </tbody>

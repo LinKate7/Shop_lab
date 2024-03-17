@@ -6,36 +6,53 @@
 
 <h1>Кошик</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
+                Товар
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                Розмір
             </th>
-            <th></th>
+            <th>
+                Кількість
+            </th>
+            <th>
+                Ціна
+            </th>
+            <th>
+                До оплати
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            @foreach (var cartItem in item.CartItems)
+             {   <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => cartItem.Product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cartItem.Product.ProductSizes.FirstOrDefault().Size.SizeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cartItem.CartItemQuantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cartItem.Product.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cartItem.TotalPrice)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
+                    </td>
+                </tr>
+             }
+         }
     </tbody>
 </table>

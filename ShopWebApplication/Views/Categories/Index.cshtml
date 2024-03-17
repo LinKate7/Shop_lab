@@ -27,11 +27,48 @@
                     @Html.DisplayFor(modelItem => item.CategoryName)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.CategoryId">Редагувати</a> |
+                    <a asp-action="Details" asp-route-id="@item.CategoryId">Товари</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CategoryId">Видалити</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<div class="container">
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+</div>
+@section scripts{
+    <html>
+    <head>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">google.charts.load('current', { 'packages': ['piechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                $.get('/api/Chart/JsonData', function (JsonData) {
+                    var data = google.visualization.arrayToDataTable(JsonData, false);
+                    var formatter = new google.visualization.NumberFormat({ prefix: '$' });
+                    formatter.format(data, 2);
+                    formatter.format(data, 3);
+                    var options = {
+                        chart: {
+                            title: 'Products',
+                            subtitle: 'Count, Price, and Total price: Name',
+                        },
+                        bars: 'horizontal' // Required for Material Bar Charts.
+                    };
+
+                    var chart = new google.charts.Bar(document.getElementById('piechart'));
+
+                    chart.draw(data, google.charts.Bar.convertOptions(options));
+                });
+            }</script>
+    </head>
+    <body>
+        <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+    </body>
+</html>
+}
+
+

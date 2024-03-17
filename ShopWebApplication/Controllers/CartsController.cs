@@ -23,7 +23,7 @@ namespace ShopWebApplication.Controllers
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var shopContext = _context.Carts.Include(c => c.User);
+            var shopContext = _context.Carts.Include(c => c.User).Include(c => c.CartItems).ThenInclude(ci => ci.Product);
             return View(await shopContext.ToListAsync());
             
         }
@@ -163,7 +163,7 @@ namespace ShopWebApplication.Controllers
             return _context.Carts.Any(e => e.CartId == id);
         }
 
-        // add cart repository action handlers
+        // Cart actions results
 
         public async Task<IActionResult> AddItem(int productId, int quantity, int redirect = 0)
         {
@@ -186,9 +186,6 @@ namespace ShopWebApplication.Controllers
             var cart = _cartRepo.GetUserCart();
             return View(cart);
         }
-
-        [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetTotalItemNumberInCart(int userId)
         {
             var itemsCount = _cartRepo.GetCartItemCount(userId);

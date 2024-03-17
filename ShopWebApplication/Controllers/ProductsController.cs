@@ -12,10 +12,14 @@ namespace ShopWebApplication.Controllers
     public class ProductsController : Controller
     {
         private readonly ShopContext _context;
+        private List<CartItem> listOfCartItems; //add
+        private readonly IHttpContextAccessor _httpContextAccessor;//add
 
-        public ProductsController(ShopContext context)
+        public ProductsController(ShopContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            listOfCartItems = new List<CartItem>(); //add
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Products

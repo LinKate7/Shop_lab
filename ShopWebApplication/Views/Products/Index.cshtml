@@ -32,9 +32,6 @@
                             <div class="col">
                                 <a href="@Url.Action("Details", new { id = item.ProductId })" class="btn btn-primary">Деталі</a>
                             </div>
-                            <div class="col">
-                                <button type="button" onclick="add(@item.ProductId)" class="btn btn-primary">Додати в кошик</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -42,23 +39,3 @@
         </div>
     }
 </div>
-@section Scripts
-{
-    <script>
-    async function add(productId) {
-        try {
-            var response = await fetch('/Cart/GetTotalItemNumberInCart/');
-            if (response.status == 200) {
-                var result = await response.json();
-                console.log(result);
-                var cartCountItems = document.getElementById("cartCount");
-                cartCountItems.innerHTML = result;
-
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-    </script>
-}

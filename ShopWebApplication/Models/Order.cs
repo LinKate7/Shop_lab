@@ -8,6 +8,7 @@ public partial class Order
 {
     public int OrderId { get; set; }
 
+    [Display(Name ="ID користувача")]
     public int UserId { get; set; }
 
     [Display(Name ="Дата й час")]
@@ -29,6 +30,6 @@ public partial class Order
     [Display(Name = "Статус")]
     public virtual Status? Status { get; set; }
 
-    [Display(Name = "Користувач, що зробив замовлення")]
+    [Display(Name = "Користувач, що замовив")]
     public virtual User? User { get; set; }
 }

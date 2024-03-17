@@ -4,6 +4,7 @@ using ShopWebApplication.Repositories;
 using ShopWebApplication;
 using Microsoft.AspNetCore.Identity;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
         .AddEntityFrameworkStores<ShopContext>()
