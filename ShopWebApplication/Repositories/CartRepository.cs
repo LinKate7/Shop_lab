@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopWebApplication.Models;
 
@@ -8,9 +7,9 @@ namespace ShopWebApplication.Repositories
 	public class CartRepository : ICartRepository
 	{
         private readonly ShopContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CartRepository(ShopContext context, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor)
+        public CartRepository(ShopContext context, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IdentityContext identityContext)
 		{
             _context = context;
             _userManager = userManager;
@@ -118,7 +117,7 @@ namespace ShopWebApplication.Repositories
 
         public int GetUserId()
         {
-            var user = _httpContextAccessor.HttpContext.User;
+            var user = _httpContextAccessor?.HttpContext?.User;
             int userId = Convert.ToInt32(_userManager.GetUserId(user));
             return userId;
         }

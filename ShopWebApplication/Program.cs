@@ -1,22 +1,38 @@
 ﻿using ShopWebApplication.Models;
 using Microsoft.EntityFrameworkCore;
-using ShopWebApplication.Repositories;
-using ShopWebApplication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Certificate;
+//using ShopWebApplication.Repositories;
+using ShopWebApplication;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-        .AddEntityFrameworkStores<ShopContext>()
-        .AddDefaultTokenProviders();
+
+builder.Services.AddRazorPages();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<ICartRepository, CartRepository>();
+
 
 builder.Services.AddDbContext<ShopContext>(option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddDbContext<IdentityContext>(option => option.UseSqlServer(
+    builder.Configuration.GetConnectionString("IdentityConnection")
+    ));
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddIdentity<UserForIdentity, IdentityRole<int>>().AddEntityFrameworkStores<IdentityContext>();
+
+//builder.Services.AddTransient<ICartRepository, CartRepository>();
+
+builder.Services.AddAuthentication(
+        CertificateAuthenticationDefaults.AuthenticationScheme)
+    .AddCertificate();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,9 +46,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseAuthentication();
+
 app.UseRouting();
 
-app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

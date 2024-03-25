@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ShopWebApplication.Models;
 
@@ -50,7 +48,8 @@ public partial class ShopContext : DbContext
             entity.ToTable("Cart");
 
             entity.Property(e => e.CartId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn()
                 .HasColumnName("CartID");
             entity.Property(e => e.TotalPrice).HasColumnType("money");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -235,7 +234,8 @@ public partial class ShopContext : DbContext
             entity.ToTable("User");
 
             entity.Property(e => e.UserId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn()
                 .HasColumnName("UserID");
             entity.Property(e => e.Email).HasColumnType("text");
             entity.Property(e => e.FirstName).HasMaxLength(50);
