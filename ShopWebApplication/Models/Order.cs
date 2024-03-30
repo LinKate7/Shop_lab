@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ShopWebApplication.Models;
 
-public partial class Order
+public class Order
 {
     public int OrderId { get; set; }
 
     [Display(Name ="ID користувача")]
-    public int UserId { get; set; }
+    public string UserId { get; set; }
 
     [Display(Name ="Дата й час")]
     public DateTime OrderDate { get; set; }

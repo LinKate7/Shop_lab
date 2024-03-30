@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ShopWebApplication.Models;
+﻿namespace ShopWebApplication.Models;
 
 public partial class CartItem
 {

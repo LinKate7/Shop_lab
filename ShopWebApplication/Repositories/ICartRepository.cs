@@ -1,16 +1,12 @@
-﻿using System;
-using ShopWebApplication.Models;
+﻿using ShopWebApplication.Models;
 
-namespace ShopWebApplication
+namespace ShopWebApplication;
+
+public interface ICartRepository
 {
-	public interface ICartRepository
-	{
-        Task<int> AddItem(int productId, int quantity);
-        Task<int> RemoveItem(int productId);
-        Task<Cart> GetCart(int userId);
-        Task<IEnumerable<Cart>> GetUserCart();
-        Task<int> GetCartItemCount(int userId);
-
-    }
+	public Task<int> AddItemAsync(int productId, int quantity);
+	public Task<int> RemoveItemAsync(int productId);
+	public Task<Cart> GetCartAsync(string userId);
+	public Task<IEnumerable<Cart>> GetUserCartAsync();
+	public Task<int> GetCartItemCountAsync(string userId);
 }
-

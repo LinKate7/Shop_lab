@@ -25,7 +25,7 @@ namespace ShopWebApplication.Controllers
         // GET: Products
         public async Task<IActionResult> Index(int? id, string? name)
         {
-            if (id == null) return RedirectToAction("Categories", "Index");
+            if (id == null) return RedirectToAction("Index", "Categories");
             //find books by category
             ViewBag.CategoryId = id;
             ViewBag.CategoryName = name;
