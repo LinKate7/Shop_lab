@@ -12,8 +12,8 @@ using ShopWebApplication.Models;
 namespace ShopWebApplication.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20240329224432_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20240331174741_InitialShop_3")]
+    partial class InitialShop_3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

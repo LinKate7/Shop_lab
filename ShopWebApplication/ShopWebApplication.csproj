@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>2bda9f23-19ac-48b0-a73a-68654d94cdd3</UserSecretsId>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
@@ -27,6 +28,7 @@
   <ItemGroup>
     <Content Remove="Views\Home\User.cshtml" />
     <Content Remove="wwwroot\Images\" />
+    <Content Remove="Migrations\**" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\Images\" />
@@ -37,5 +39,12 @@
     <None Remove="ViewModels\" />
     <None Remove="Views\Account\" />
     <None Remove="docker-compose.yml" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Migrations\**" />
   </ItemGroup>
 </Project>

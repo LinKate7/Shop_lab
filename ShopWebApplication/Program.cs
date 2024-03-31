@@ -1,6 +1,5 @@
 ﻿using ShopWebApplication.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Identity;
 using ShopWebApplication.Initializer;
 

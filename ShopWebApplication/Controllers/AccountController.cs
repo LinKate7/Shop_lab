@@ -55,11 +55,11 @@ public class AccountController : Controller
             
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            var isRoleAdded = await _userManager.AddToRoleAsync(user, role.Name);
+            //var isRoleAdded = await _userManager.AddToRoleAsync(user, "user");
             
-            if (result.Succeeded && isRoleAdded.Succeeded)
+            if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, isPersistent: true);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -68,10 +68,10 @@ public class AccountController : Controller
                 ModelState.AddModelError(string.Empty, error.Description);
             }
             
-            foreach (var error in isRoleAdded.Errors)
+            /*foreach (var error in isRoleAdded.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
-            }
+            }*/
         }
 
         return View(model);
