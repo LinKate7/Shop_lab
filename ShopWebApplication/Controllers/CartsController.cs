@@ -18,7 +18,9 @@ public class CartsController : Controller
     // GET: Carts
     public async Task<IActionResult> Index()
     {
-        var shopContext = _context.Carts.Include(c => c.User).Include(c => c.CartItems).ThenInclude(ci => ci.Product);
+        var shopContext = _context.Carts.Include(c => c.User).Include(c => c.CartItems).ThenInclude(ci => ci.Product)
+            .ThenInclude(p => p.ProductSizes)
+            .ThenInclude(ps => ps.Size);
         return View(await shopContext.ToListAsync());
             
     }
@@ -158,9 +160,9 @@ public class CartsController : Controller
 
     // Cart actions results
 
-    public async Task<IActionResult> AddItem(int productId, int quantity, int redirect = 0)
+    public async Task<IActionResult> AddItem(int productId, int sizeId, int quantity = 1, int redirect = 0) //added sizeId
     {
-        var cartItemsCount = await _cartRepo.AddItemAsync(productId, quantity);
+        var cartItemsCount = await _cartRepo.AddItemAsync(productId, quantity, sizeId);
             
         if(redirect == 0)
         {
@@ -184,9 +186,9 @@ public class CartsController : Controller
     {
         return await _cartRepo.GetUserCartAsync();
     }
-    public async Task<IActionResult> GetTotalItemNumberInCart(string userId)
+    public async Task<IActionResult> GetTotalItemNumberInCart() 
     {
-        var itemsCount = _cartRepo.GetCartItemCountAsync(userId);
+        int itemsCount = await _cartRepo.GetCartItemCountAsync(); //changed from var to int
         return Ok(itemsCount);
     }
 }

@@ -42,6 +42,19 @@ namespace ShopWebApplication.Controllers
 
             return new JsonResult(orderStatuses);
         }
+        [HttpGet("popular-clothing-items")]
+        public async Task<IActionResult> GetPopularClothingItems()
+        {
+            var popularItems = await _context.OrderItems
+                .Include(oi => oi.Product)
+                .GroupBy(oi => oi.Product.ProductName)
+                .OrderByDescending(group => group.Count())
+                .Select(group => new { ProductName = group.Key, OrderCount = group.Count() })
+                .Take(3)
+                .ToListAsync();
+
+            return new JsonResult(popularItems);
+        }
 
     }
 }

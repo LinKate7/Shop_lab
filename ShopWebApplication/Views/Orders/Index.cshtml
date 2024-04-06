@@ -22,6 +22,12 @@
     }
 </style>
 
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
+
 <h1>Список замовлень</h1>
 
 <table class="table">
@@ -96,13 +102,11 @@
 </table>
 
 <div id="pie_chart_div"></div>
-
 @section scripts{
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-google.charts.load('current', { 'packages': ['corechart'] });
+    <script>google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawChart);
 
         async function drawChart() {
@@ -122,4 +126,6 @@ google.charts.load('current', { 'packages': ['corechart'] });
                 console.error('Error fetching pie chart data:', error);
             }
         }</script>
+
+
 }

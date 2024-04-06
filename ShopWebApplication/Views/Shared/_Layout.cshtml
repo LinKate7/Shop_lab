@@ -65,4 +65,24 @@
     @await RenderSectionAsync("Scripts", required: false)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+
+<script>
+    loadCartCount();
+    async function loadCartCount() {
+        console.log("Hello! Hit the method")
+        try {
+            var response = await fetch(`/Carts/GetTotalItemNumberInCart`);
+            console.log(response);
+            if (response.status == 200) {
+                var result = await response.json();
+                var cartItemCount = document.getElementById("cartCount");
+                cartItemCount.innerHTML = result;
+            }
+        }
+        
+        catch (error) {
+                console.log(error);
+        }
+   }
+</script>
 </html>

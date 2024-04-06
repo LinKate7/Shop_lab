@@ -78,17 +78,18 @@
 {
     <script>async function add(productId) {
             try {
-                    var selectedSize = document.querySelector('input[name="flexRadioDefault"]:checked');
+                var selectedSize = document.querySelector('input[name="flexRadioDefault"]:checked');
                     if (!selectedSize) {
                         alert('Будь ласка, оберіть розмір.');
                         return;
-                    }
-                    var response = await fetch('/Carts/GetTotalItemNumberInCart?userId=${userId}');
+                }
+                var sizeId = selectedSize.id; //added
+                var response = await fetch(`/Carts/AddItem?productId=${productId}&sizeId=${sizeId}`); //added sizeId
                     if (response.status == 200) {
                         var result = await response.json();
                         console.log(result);
-                        var cartCountItems = document.getElementById("cartCount");
-                        cartCountItems.innerHTML = result;
+                        var cartItemCount = document.getElementById("cartCount");
+                        cartItemCount.innerHTML = result;
 
                     }
             }

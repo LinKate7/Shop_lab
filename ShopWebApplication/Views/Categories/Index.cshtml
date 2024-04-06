@@ -4,6 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
 
 <h1>Категорії одягу</h1>
 
@@ -35,25 +40,29 @@
         }
     </tbody>
 </table>
-<div id="countByCategoryChart"></div>
-@section scripts{
-    <script>function drawCountByCategoryChart(categoryToCountList) {
-            const dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'Категорія');
-            dataTable.addColumn('number', 'Кількість товарів');
 
-            categoryToCountList.forEach(item => {
-                dataTable.addRow([item.categoryName, item.count]);
+<div id="countBestsellersChart"></div>
+
+@section scripts{
+
+    <script>function drawBestsellersChart(clothingItemsToCountList, navbarColor) {
+            const dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Товар');
+            dataTable.addColumn('number', 'Кількість замовлень цього товару');
+
+            clothingItemsToCountList.forEach(item => {
+                dataTable.addRow([item.productName, item.orderCount]);
             });
 
             const options = {
-                title: "Товари за категоріями",
+                title: "Бестселлери",
                 width: 600,
                 height: 400,
-                legend: { position: 'none' }
+                legend: { position: 'none' },
+                colors: [navbarColor] 
             };
 
-            const chart = new google.visualization.ColumnChart(document.getElementById('countByCategoryChart'));
+            const chart = new google.visualization.ColumnChart(document.getElementById('countBestsellersChart'));
             chart.draw(dataTable, options);
         }
 
@@ -61,10 +70,11 @@
         google.charts.setOnLoadCallback(drawCharts);
 
         function drawCharts() {
-            fetch('/api/Chart/countByCategory')
+            fetch('/api/Chart/popular-clothing-items')
                 .then(response => response.json())
                 .then(data => {
-                    drawCountByCategoryChart(data)
+                    const navbarColor = getComputedStyle(document.querySelector('.navbar')).getPropertyValue('background-color');
+                    drawBestsellersChart(data, navbarColor)
                 });
         }</script>
 }

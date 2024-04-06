@@ -35,7 +35,7 @@
                         @Html.DisplayFor(modelItem => cartItem.Product.ProductName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => cartItem.Product.ProductSizes.FirstOrDefault().Size.SizeName)
+                        @Html.DisplayFor(modelItem => cartItem.Size.SizeName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => cartItem.CartItemQuantity)
@@ -53,6 +53,8 @@
                     </td>
                 </tr>
              }
+
          }
     </tbody>
 </table>
+<div>Total Price: @Model.Sum(cart => cart.TotalPrice)</div>
