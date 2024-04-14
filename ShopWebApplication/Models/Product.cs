@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ShopWebApplication.Models;
 
@@ -20,7 +18,7 @@ public partial class Product
     [Display(Name = "Категорія")]
     public int? CategoryId { get; set; }
 
-    [Display(Name = "Картинка")]
+   
     public string? ImageUrl { get; set; }
 
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();

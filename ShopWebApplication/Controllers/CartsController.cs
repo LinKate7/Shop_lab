@@ -18,10 +18,11 @@ public class CartsController : Controller
     // GET: Carts
     public async Task<IActionResult> Index()
     {
+        var cart = await _cartRepo.GetUserCartAsync();
         var shopContext = _context.Carts.Include(c => c.User).Include(c => c.CartItems).ThenInclude(ci => ci.Product)
             .ThenInclude(p => p.ProductSizes)
             .ThenInclude(ps => ps.Size);
-        return View(await shopContext.ToListAsync());
+        return View(cart);
             
     }
 
@@ -182,13 +183,21 @@ public class CartsController : Controller
         return RedirectToAction("Index", cart);
     }
 
-    private async Task<IEnumerable<Cart>> GetUserCart()
+    private async Task<IEnumerable<Cart>> GetUserCart() //changed
     {
         return await _cartRepo.GetUserCartAsync();
     }
     public async Task<IActionResult> GetTotalItemNumberInCart() 
     {
-        int itemsCount = await _cartRepo.GetCartItemCountAsync(); //changed from var to int
+        int itemsCount = await _cartRepo.GetCartItemCountAsync();
         return Ok(itemsCount);
+    }
+
+    public async Task<IActionResult> Checkout()
+    {
+        bool isCheckedOut = await _cartRepo.MakePurchaseAsync();
+        if (!isCheckedOut)
+            throw new Exception("Something went wrong.");
+        return RedirectToAction("Index", "Home");
     }
 }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,19 +9,32 @@ namespace ShopWebApplication
     public class OrdersController : Controller
     {
         private readonly ShopContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public OrdersController(ShopContext context)
+        public OrdersController(ShopContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var shopContext = _context.Orders.Include(o => o.ClientInfo).Include(o => o.Status).Include(o => o.User).Include(o => o.OrderItems)
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("NoOrdersMessage");
+            }
+            var shopContext = _context.Orders
+                .Where(o => o.UserId == user.Id)
+                .Include(o => o.ClientInfo)
+                .Include(o => o.Status)
+                .Include(o => o.User)
+                .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .ThenInclude(p => p.ProductSizes)
-                .ThenInclude(ps => ps.Size);
+                .ThenInclude(ps => ps.Size)
+                .Include(o => o.ClientInfo);
             return View(await shopContext.ToListAsync());
         }
 

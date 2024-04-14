@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShopWebApplication.Models;
 
 public class Order
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderId { get; set; }
 
     [Display(Name ="ID користувача")]
@@ -13,7 +16,7 @@ public class Order
     public DateTime OrderDate { get; set; }
 
     [Display(Name = "До оплати")]
-    public int Price { get; set; }
+    public decimal Price { get; set; }
 
     [Display(Name = "Статус")]
     public int StatusId { get; set; }

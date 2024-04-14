@@ -4,128 +4,74 @@
     ViewData["Title"] = "Index";
 }
 
-<style>
-    .order-item-info td {
-        vertical-align: middle;
-    }
-</style>
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.SelectMany(c => c.OrderItems).Any())
+    {
+        <section class="h-100 gradient-custom">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-lg-10 col-xl-8">
+                        <div class="card" style="border-radius: 10px;">
 
-<style>
-    .order-item-info-headers th {
-        text-align: left
-    }
-</style>
-<style>
-    .product-image {
-        max-width: 100px;
-        max-height: 100px;
-    }
-</style>
-
-<style>
-    a {
-        text-decoration: none;
-    }
-</style>
-
-<h1>Список замовлень</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th class="text-center">
-                Товар
-            </th>
-            <th class="text-center">
-                Картинка
-            </th>
-            <th class="text-center">
-                Кількість
-            </th>
-            <th class="text-center">
-                Ціна
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClientInfo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var order in Model)
-        {
-            <tr>
-                <td style="vertical-align: middle">
-                    @order.OrderDate.ToString("dd.MM.yyyy HH:mm:ss")
-                </td>
-                <td colspan="4" class="order-item-info" class="order-item-info">
-                    <table>
-                        <tbody>
-                            @foreach (var orderItem in order.OrderItems)
+                        <div class="card-body p-4">
+                            @foreach (var order in Model)
                             {
-                                <tr>
-                                    <td>@orderItem?.Product?.ProductName</td>
-                                    <td><img src="@orderItem.Product?.ImageUrl" alt="Clothing Image" class="product-image" /></td>
-                                    <td>@orderItem?.OrderItemQuantity</td>
-                                    <td>@orderItem?.Product?.Price</td>
-                                </tr>
+                                <div class="card-header px-4 py-3">
+                                    <h5 class="text-muted mb-0">Дякуємо за замовлення, <span style="color: #a8729a;">@order.ClientInfo?.FirstName</span>!</h5>
+                                </div>
+                                <div class="card shadow-0 border mb-3">
+                                    <div class="card-body">
+                                        @foreach (var orderItem in order.OrderItems)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <img src="@orderItem.Product.ImageUrl" class="img-fluid" alt="Product Image">
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0">@orderItem.Product.ProductName</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">Кількість: @orderItem.OrderItemQuantity</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">Розмір: @orderItem.Size.SizeName</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">@orderItem.OrderItemQuantity × @orderItem.Product.Price &#8372;</p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                    <p class="text-muted mb-0 small">@((int)(orderItem.Product.Price * orderItem.OrderItemQuantity)) &#8372;</p>
+                                                </div>
+                                            </div>
+                                            <hr class="my-3" style="background-color: #e0e0e0; opacity: 1;"> <!-- Reduced margin here -->
+                                        }
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-md-10">
+                                                <!-- Progress bar here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                </td>
-                <td style="vertical-align: middle">
-                    @Html.DisplayFor(modelItem => order.Price)
-                </td>
-                <td style="vertical-align: middle">
-                    @Html.DisplayFor(modelItem => order.ClientInfo.FullName)
-                </td>
-                <td style="vertical-align: middle">
-                    @Html.DisplayFor(modelItem => order.Status.StatusName)
-                </td>
-                <td style="vertical-align: middle">
-                    <a asp-action="Edit" asp-route-id="@order.OrderId">Редагувати</a> |
-                    <a asp-action="Details" asp-route-id="@order.OrderId">Деталі</a> |
-                    <a asp-action="Delete" asp-route-id="@order.OrderId">Видалити</a>
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
-
-<div id="pie_chart_div"></div>
-@section scripts{
-
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>google.charts.load('current', { 'packages': ['corechart'] });
-        google.charts.setOnLoadCallback(drawChart);
-
-        async function drawChart() {
-            try {
-                const response = await axios.get('/api/chart/piechart-data');
-                const data = response.data;
-                const dataTable = google.visualization.arrayToDataTable(data);
-
-                const options = {
-                    title: 'Кількість товварів, що мають відповідний статус',
-                    is3D: true,
-                };
-
-                const chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
-                chart.draw(dataTable, options);
-            } catch (error) {
-                console.error('Error fetching pie chart data:', error);
-            }
-        }</script>
-
-
+                        </div>
+                            <!-- Card footer with total paid -->
+                            <div class="card-footer border-0 px-4 py-3" style="background-color: #000; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; ">
+                                <!-- Reduced padding here -->
+                                <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Разом сплачено: <span class="h2 mb-0 ms-2">&#8372;@Model.Sum(order => order.Price)</span></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="mt-4">Замовлень наразі немає. Перейдіть до каталогу, щоб обрати товар.</div>
+    }
+}
+else
+{
+    <div class="mt-4">Будь ласка, <a href="/Account/Login">увійдіть</a> або <a href="/Account/Register">зареєструйтесь</a>.</div>
 }
