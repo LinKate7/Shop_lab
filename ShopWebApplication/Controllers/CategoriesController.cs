@@ -1,16 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopWebApplication.Models;
+using ShopWebApplication.Services;
 
 namespace ShopWebApplication.Controllers
 {
     public class CategoriesController : Controller
     {
         private readonly ShopContext _context;
+        private IDataPortServiceFactory<Category> _categoryDataPortServiceFactory;
 
-        public CategoriesController(ShopContext context)
+        public CategoriesController(ShopContext context, IDataPortServiceFactory<Category> categoryDataPortServiceFactory)
         {
             _context = context;
+            _categoryDataPortServiceFactory = categoryDataPortServiceFactory;
         }
 
         // GET: Categories
@@ -37,7 +40,7 @@ namespace ShopWebApplication.Controllers
             //return View(category);
             ViewBag.CategoryName = category.CategoryName;
             return RedirectToAction("Index", "Products", new { id = category.CategoryId, name = category.CategoryName });
-            
+
         }
 
         // GET: Categories/Create
@@ -149,6 +152,47 @@ namespace ShopWebApplication.Controllers
         private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.CategoryId == id);
+        }
+
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> Import(IFormFile fileExcel, CancellationToken cancellationToken = default)
+        {
+            var importService = _categoryDataPortServiceFactory.GetImportService(fileExcel.ContentType);
+
+            using var stream = fileExcel.OpenReadStream();
+
+            await importService.ImportFromStreamAsync(stream, cancellationToken);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Export([FromQuery] string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            CancellationToken cancellationToken = default)
+        {
+            var exportService = _categoryDataPortServiceFactory.GetExportService(contentType);
+
+            var memoryStream = new MemoryStream();
+
+            await exportService.WriteToAsync(memoryStream, cancellationToken);
+
+            await memoryStream.FlushAsync(cancellationToken);
+            memoryStream.Position = 0;
+
+
+            return new FileStreamResult(memoryStream, contentType)
+            {
+                FileDownloadName = $"categories_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+            };
+
         }
     }
 }

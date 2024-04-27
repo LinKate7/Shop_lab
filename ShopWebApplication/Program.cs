@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ShopWebApplication.Initializer;
 using ShopWebApplication;
+using ShopWebApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllersWithViews();
@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ShopContext>(option => option.UseSqlServer(
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IDataPortServiceFactory<Category>, CategoryDataPortServiceFactory>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {

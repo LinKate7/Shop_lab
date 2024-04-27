@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\Home\User.cshtml" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\Images\" />
     <Folder Include="Repositories\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Repositories\" />
@@ -43,6 +45,7 @@
     <None Remove="Views\Account\" />
     <None Remove="docker-compose.yml" />
     <None Remove="Migrations\**" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\**" />
